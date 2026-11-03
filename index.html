@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Hoja de Presentación Feria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root {
+  --paper: #f5f7f2;
+  --panel: #ffffff;
+  --ink: #1c2620;
+  --ink-soft: #55625a;
+  --line: #d5ddd4;
+  --leaf: #3f6b22;
+  --leaf-soft: #e6efdc;
+  --warn: #9a3412;
+  --warn-soft: #fbe9df;
+  --ok: #2f6b3a;
+  --shadow: 0 1px 2px rgba(20,40,25,.08), 0 8px 24px rgba(20,40,25,.08);
+  --f-display: "Bricolage Grotesque", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.45;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% 28px; background-attachment: fixed; }
+body::before { content:""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--panel); }
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding-block: 10px; max-width: 1400px; margin: 0 auto; }
+.brand { display: flex; flex-direction: column; min-width: 0; flex: 1 1 260px; }
+.brand b { font-family: var(--f-display); font-weight: 800; font-size: 1.25rem; letter-spacing: -.01em; line-height: 1.1; }
+.brand span { font-size: .85rem; color: var(--ink-soft); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+button, .btn { font: inherit; font-weight: 700; font-size: .92rem; border-radius: 10px; padding: 9px 14px; cursor: pointer; border: 1.5px solid var(--line); background: var(--panel); color: var(--ink); }
+button:hover { border-color: var(--leaf); }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--leaf); outline-offset: 2px; }
+button.primary { background: var(--leaf); border-color: var(--leaf); color: var(--panel); }
+button.primary:hover { filter: brightness(1.08); }
+button.ghost { border-style: dashed; }
+button:disabled { opacity: .55; cursor: progress; }
+
+.status { max-width: 1400px; margin: 0 auto; }
+.banner { margin-top: 12px; border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: .95rem; }
+.banner.example { background: var(--leaf-soft); border: 1.5px solid var(--leaf); }
+.banner.problem { background: var(--warn-soft); border: 1.5px solid var(--warn); color: var(--ink); }
+.banner.done { background: var(--leaf-soft); border: 1.5px solid var(--ok); }
+.banner p { margin: 0; flex: 1 1 280px; min-width: 0; }
+.banner ul { margin: 6px 0 0; padding-left: 20px; }
+
+.tabs { display: none; gap: 6px; margin-top: 12px; }
+.tabs button { flex: 1; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+
+main.grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 24px; max-width: 1400px; margin: 0 auto; padding-block: 16px 48px; align-items: start; }
+.form { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.preview { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 80px); min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.preview .hint { font-size: .85rem; color: var(--ink-soft); }
+.pages { display: flex; flex-direction: column; gap: 14px; max-height: calc(100vh - 140px); overflow: auto; padding: 4px; border-radius: 12px; }
+.pageframe { position: relative; flex: none; box-shadow: var(--shadow); border-radius: 4px; overflow: hidden; background: #fff; }
+.pageframe .scaler { transform-origin: 0 0; position: absolute; left: 0; top: 0; }
+.pageframe .over { position: absolute; inset: auto 0 0 0; background: #9a3412; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 8px; text-align: center; }
+
+fieldset.card { border: 1px solid var(--line); background: var(--panel); border-radius: 14px; padding: 16px; margin: 0; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.card legend { display: contents; }
+.card .head { display: flex; align-items: baseline; gap: 10px; }
+.card .num { font-family: var(--f-display); font-weight: 800; background: var(--ink); color: var(--panel); border-radius: 6px; min-width: 28px; height: 28px; display: inline-grid; place-items: center; font-size: .95rem; flex: none; }
+.card h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; margin: 0; text-wrap: balance; }
+.card .crit { margin-left: auto; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); white-space: nowrap; }
+.card .help { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.row > * { min-width: 0; }
+.f { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.f label { font-weight: 700; font-size: .88rem; display: flex; justify-content: space-between; gap: 8px; }
+.f label .cnt { font-weight: 400; color: var(--ink-soft); font-variant-numeric: tabular-nums; font-size: .8rem; }
+.f label .req { color: var(--warn); }
+input[type=text], textarea, select { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1.5px solid var(--line); border-radius: 9px; padding: 8px 10px; width: 100%; min-width: 0; }
+textarea { resize: vertical; min-height: 64px; line-height: 1.35; }
+.missing input, .missing textarea, .missing select { border-color: var(--warn); background: var(--warn-soft); }
+.small { font-size: .82rem; color: var(--ink-soft); }
+.cambio { border: 1.5px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.cambio h3 { margin: 0; font-size: 1rem; font-family: var(--f-display); font-weight: 800; display: flex; gap: 8px; align-items: center; }
+.cambio.off > :not(h3) { display: none; }
+.subt { font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); font-weight: 700; }
+table.nut { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.nutwrap { overflow-x: auto; }
+table.nut th, table.nut td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line); font-size: .92rem; }
+table.nut th { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); }
+table.nut input { padding: 6px 8px; text-align: right; }
+table.nut td.chg { font-weight: 700; white-space: nowrap; }
+.sellos-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; gap: 6px; align-items: center; border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 10px; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.chip input { accent-color: var(--ink); }
+.toggle { display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: .9rem; cursor: pointer; }
+.toggle input { width: 18px; height: 18px; accent-color: var(--leaf); }
+.note-free { font-size: .88rem; background: var(--leaf-soft); border-radius: 10px; padding: 10px 12px; margin: 0; }
+dialog { border: 1.5px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--ink); max-width: 420px; padding: 18px; }
+dialog::backdrop { background: rgba(0,0,0,.35); }
+dialog .actions { margin-top: 12px; justify-content: flex-end; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 920px) {
+  header.top { position: static; }
+  main.grid { grid-template-columns: minmax(0, 1fr); }
+  .tabs { display: flex; }
+  body[data-view="form"] .preview { display: none; }
+  body[data-view="preview"] .form { display: none; }
+  .preview { position: static; }
+  .pages { max-height: none; }
+}
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+
+#capture { position: fixed; left: -12000px; top: 0; }
+.sheet { width: 816px; height: 1247px; background: #fff; color: #111; font-family: "Inter", Arial, sans-serif; font-size: 12.2px; line-height: 1.28; padding: 45px 49px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+.sheet * { box-sizing: border-box; }
+.sheet > * { flex-shrink: 0; }
+.sheet .sh { border-bottom: 2.5px solid #111; padding-bottom: 11px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.sheet h1 { font-size: 22.5px; margin: 0; line-height: 1.1; font-weight: 800; letter-spacing: -.01em; }
+.sheet .sub { font-size: 12.5px; color: #333; margin-top: 4px; }
+.sheet .meta { font-size: 11.4px; text-align: right; color: #222; line-height: 1.45; max-width: 46%; }
+.sheet h2 { font-size: 14.5px; margin: 0 0 7px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.sheet h2 .n { background: #111; color: #fff; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 3px; flex: none; }
+.sheet h2 .tag { font-weight: 400; font-size: 10.5px; color: #555; margin-left: auto; }
+.sheet section { border: 1px solid #999; border-radius: 5px; padding: 9px 12px; }
+.sheet table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sheet th, .sheet td { border: 1px solid #888; padding: 3px 7px; text-align: left; vertical-align: top; }
+.sheet th { background: #222; color: #fff; font-weight: 600; }
+.sheet td.c, .sheet th.c { text-align: center; }
+.sheet tr.hl td { font-weight: 700; background: #eee; }
+.sheet .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sheet .cb { border: 1px solid #aaa; border-radius: 4px; padding: 7px 9px; }
+.sheet .cb b.t { display: block; font-size: 12.8px; margin-bottom: 1px; }
+.sheet .cb .bio { font-size: 10.6px; font-style: italic; color: #444; display: block; margin-bottom: 3px; }
+.sheet .cb p { margin: 2px 0; }
+.sheet ul, .sheet ol { margin: 4px 0 0; padding-left: 18px; }
+.sheet li { margin: 2px 0; }
+.sheet .note { font-size: 10.8px; color: #444; }
+.sheet .foot { margin-top: auto; font-size: 10.2px; color: #555; text-align: center; }
+.sheet .esq { display: grid; grid-template-columns: 236px 1fr 236px; row-gap: 10px; align-items: center; }
+.sheet .esq .colh { font-weight: 700; font-size: 11.5px; text-align: center; color: #555; padding-bottom: 2px; }
+.sheet .esq .colh.m { color: #111; }
+.sheet .box { border: 1.3px solid #777; border-radius: 7px; padding: 7px 11px; min-height: 52px; display: flex; flex-direction: column; justify-content: center; }
+.sheet .box.m { background: #e9e9e9; border: 2.2px solid #111; }
+.sheet .box b { font-size: 12.8px; }
+.sheet .box span { font-size: 11px; color: #444; }
+.sheet .box.m span { color: #111; }
+.sheet .arr { display: flex; flex-direction: column; align-items: stretch; padding: 0 8px; text-align: center; }
+.sheet .arr .bio { font-size: 11px; color: #444; margin-bottom: 3px; }
+.sheet .arr .line { display: flex; align-items: center; }
+.sheet .arr .line i { flex: 1; height: 0; border-top: 1.5px solid #333; }
+.sheet .arr .line em { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 9px solid #333; }
+.sheet .arr .dato { font-size: 12px; font-weight: 700; margin-top: 4px; }
+.sheet .res { grid-column: 1 / -1; background: #111; color: #fff; border-radius: 6px; padding: 7px 12px; text-align: center; font-weight: 700; font-size: 12.2px; }
+.sheet .rec { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sheet .rec h3 { font-size: 12.8px; margin: 0 0 3px; }
+.sheet .paste { border: 1.8px dashed #555; border-radius: 5px; height: 226px; display: flex; align-items: center; justify-content: center; text-align: center; color: #444; font-size: 11.6px; padding: 14px; }
+.sheet .paste b { display: block; font-size: 12.8px; color: #111; margin-bottom: 3px; }
+.sheet .paste .sl { display: flex; gap: 6px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+.sheet .blank { border-bottom: 1px solid #666; height: 15px; }
+.sheet .bl2 { display: flex; gap: 6px; align-items: flex-end; margin-top: 8px; }
+.sheet .bl2 b { flex: none; }
+.sheet .bl2 .blank { flex: 1; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b>Hoja de Presentación · Feria</b><span>Mismo plato, mejor nutrición · Biología Celular y Molecular</span></div>
+    <div class="actions">
+      <button type="button" id="btnNew" class="ghost">Empezar mi hoja</button>
+      <button type="button" id="btnSaveDraft">Guardar borrador</button>
+      <button type="button" id="btnOpenDraft">Abrir borrador</button>
+      <button type="button" id="btnPdf" class="primary">Descargar PDF</button>
+      <input type="file" id="draftFile" accept=".json,application/json" class="sr" tabindex="-1" aria-hidden="true">
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="tabs status" role="tablist">
+    <button type="button" role="tab" id="tabForm" aria-selected="true">Formulario</button>
+    <button type="button" role="tab" id="tabPrev" aria-selected="false">Vista previa</button>
+  </div>
+  <main class="grid">
+    <form class="form" id="form" autocomplete="off" novalidate>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">0</span><h2>Datos del equipo</h2></div></legend>
+        <div class="f"><label for="plato">Nombre del plato <span class="req">*</span></label><input type="text" id="plato" maxlength="40" data-req placeholder="Ej.: fideos con salsa"></div>
+        <div class="f"><label for="integrantes">Integrantes <span class="req">*</span></label><input type="text" id="integrantes" maxlength="90" data-req placeholder="Nombres separados por coma"></div>
+        <div class="f"><label for="curso">Curso <span class="req">*</span></label><input type="text" id="curso" maxlength="20" data-req placeholder="Ej.: 3° medio B"></div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">1</span><h2>Los dos platos y sus cambios</h2><span class="crit">Criterio 1</span></div></legend>
+        <p class="help">Escribe al menos 3 cambios. Cada uno es un ingrediente del plato original que reemplazaron por otro más nutritivo, sin dejar de ser el mismo plato.</p>
+        <div id="cambios"></div>
+        <div class="f"><label for="resultado">Resultado total por plato <span class="req">*</span><span class="cnt" data-cnt="resultado"></span></label><input type="text" id="resultado" maxlength="100" data-req placeholder="Ej.: −72 % sodio · 2,6 veces más fibra · el doble de proteína"></div>
+        <p class="small">Usa los resultados de tu tabla (sección 3). Habla de nutrientes, no de calorías.</p>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">2</span><h2>Por qué cada cambio es mejor</h2><span class="crit">Criterios 2 y 4</span></div></legend>
+        <p class="help">Para cada cambio, explica la <b>estructura</b> de la biomolécula (qué tiene de distinto) y su <b>efecto</b> en el cuerpo. Usa la Guía de conceptos. Los campos aparecen dentro de cada cambio en la sección 1.</p>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">3</span><h2>Comparación nutricional</h2><span class="crit">Criterio 3</span></div></legend>
+        <p class="note-free">En esta feria no calculamos calorías. Comparen fibra, grasas saturadas, azúcares, sodio y proteínas.</p>
+        <div class="f"><label for="porcion">Porción que comparan <span class="req">*</span><span class="cnt" data-cnt="porcion"></span></label><input type="text" id="porcion" maxlength="120" data-req placeholder="Ej.: 1 plato por persona: 80 g de fideos crudos + 100 g de carne + ~100 g de salsa"></div>
+        <div class="nutwrap"><table class="nut">
+          <thead><tr><th>Nutriente</th><th>Original</th><th>Mejorado</th><th>Cambio</th></tr></thead>
+          <tbody id="nutBody"></tbody>
+        </table></div>
+        <p class="small">Escribe solo números (puedes usar coma decimal). El cambio se calcula solo y se destacan los 3 cambios más grandes.</p>
+        <div class="subt">Conclusiones (3)</div>
+        <div class="f"><label for="concl1">Conclusión 1 <span class="req">*</span><span class="cnt" data-cnt="concl1"></span></label><input type="text" id="concl1" maxlength="125" data-req></div>
+        <div class="f"><label for="concl2">Conclusión 2 <span class="req">*</span><span class="cnt" data-cnt="concl2"></span></label><input type="text" id="concl2" maxlength="125" data-req></div>
+        <div class="f"><label for="concl3">Conclusión 3 <span class="req">*</span><span class="cnt" data-cnt="concl3"></span></label><input type="text" id="concl3" maxlength="125" data-req></div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">4</span><h2>Recetas</h2><span class="crit">Requisito</span></div></legend>
+        <div class="f"><label for="porciones">Para cuántas personas <span class="req">*</span></label><input type="text" id="porciones" maxlength="3" inputmode="numeric" data-req placeholder="Ej.: 4"></div>
+        <div class="subt">Plato original</div>
+        <div class="f"><label for="ro_ing">Ingredientes (uno por línea) <span class="req">*</span><span class="cnt" data-cnt="ro_ing"></span></label><textarea id="ro_ing" rows="4" maxlength="280" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="ro_pasos">Preparación (un paso por línea) <span class="req">*</span><span class="cnt" data-cnt="ro_pasos"></span></label><textarea id="ro_pasos" rows="4" maxlength="320" data-req data-lines="6"></textarea></div>
+        <div class="subt">Plato mejorado</div>
+        <div class="f"><label for="rm_ing">Ingredientes (uno por línea) <span class="req">*</span><span class="cnt" data-cnt="rm_ing"></span></label><textarea id="rm_ing" rows="4" maxlength="280" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="rm_pasos">Preparación (un paso por línea) <span class="req">*</span><span class="cnt" data-cnt="rm_pasos"></span></label><textarea id="rm_pasos" rows="4" maxlength="320" data-req data-lines="6"></textarea></div>
+        <p class="small">Indica entre paréntesis qué ingrediente reemplaza cada cambio, por ejemplo: «320 g de fideos integrales (reemplaza fideos blancos)».</p>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">5</span><h2>Ingredientes y alérgenos</h2><span class="crit">Criterio 5</span></div></legend>
+        <div class="row">
+          <div class="f"><label for="a_ing">Plato A · ingredientes <span class="req">*</span></label><textarea id="a_ing" rows="3" maxlength="130" data-req></textarea></div>
+          <div class="f"><label for="b_ing">Plato B · ingredientes <span class="req">*</span></label><textarea id="b_ing" rows="3" maxlength="130" data-req></textarea></div>
+        </div>
+        <div class="row">
+          <div class="f"><label for="a_ale">Plato A · alérgenos <span class="req">*</span></label><input type="text" id="a_ale" maxlength="90" data-req placeholder="Ej.: gluten, leche"></div>
+          <div class="f"><label for="b_ale">Plato B · alérgenos <span class="req">*</span></label><input type="text" id="b_ale" maxlength="90" data-req placeholder="Si no tiene, escribe «Ninguno»"></div>
+        </div>
+        <p class="small">Alérgenos frecuentes: gluten, leche, huevo, maní y frutos secos, soya, pescado, mariscos.</p>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">6</span><h2>Etiquetas del plato original</h2><span class="crit">Requisito</span></div></legend>
+        <p class="help">Nombra los productos envasados del plato original cuya etiqueta van a pegar en la hoja impresa, y marca sus sellos.</p>
+        <div id="etiquetas"></div>
+        <div class="f"><label for="e_nota">Nota bajo las etiquetas <span class="cnt" data-cnt="e_nota"></span></label><input type="text" id="e_nota" maxlength="100"></div>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">7</span><h2>Resultado de la degustación</h2><span class="crit">Criterio 6</span></div></legend>
+        <p class="help">Esta tabla sale en blanco. La completan a mano al final de la feria.</p>
+      </fieldset>
+
+      <fieldset class="card">
+        <legend><div class="head"><span class="num">8</span><h2>Fuentes</h2></div></legend>
+        <div class="f"><label for="fuentes">Una fuente por línea <span class="req">*</span><span class="cnt" data-cnt="fuentes"></span></label><textarea id="fuentes" rows="6" maxlength="520" data-req data-lines="6"></textarea></div>
+      </fieldset>
+
+      <button type="button" class="primary" id="btnPdf2">Descargar PDF</button>
+    </form>
+
+    <aside class="preview" aria-label="Vista previa de la hoja">
+      <div class="hint">Vista previa · hoja de oficio, anverso y reverso</div>
+      <div class="pages" id="pages"></div>
+    </aside>
+  </main>
+</div>
+
+<div id="capture" aria-hidden="true"></div>
+
+<dialog id="confirmNew">
+  <p><b>¿Vaciar el formulario?</b></p>
+  <p class="small">Se borrará lo que está escrito en este navegador. Si quieres conservarlo, primero usa «Guardar borrador».</p>
+  <div class="actions"><button type="button" id="cnCancel">Cancelar</button><button type="button" class="primary" id="cnOk">Vaciar</button></div>
+</dialog>
+
+<script>
+(() => {
+  const STORE = "feria-hoja-v1";
+  const NUT = [
+    { k: "prot", label: "Proteínas (g)" },
+    { k: "sat", label: "Grasas saturadas (g)" },
+    { k: "azu", label: "Azúcares (g)" },
+    { k: "fib", label: "Fibra (g)" },
+    { k: "sod", label: "Sodio (mg)" },
+  ];
+  const SELLOS = [
+    { k: "sod", t: "ALTO EN<br>SODIO", label: "Sodio" },
+    { k: "azu", t: "ALTO EN<br>AZÚCARES", label: "Azúcares" },
+    { k: "sat", t: "ALTO EN<br>GRASAS<br>SATURADAS", label: "Grasas saturadas" },
+  ];
+  const BIOS = ["Carbohidratos", "Carbohidratos simples (azúcares)", "Fibra", "Lípidos", "Proteínas", "Proteínas y grasas", "Azúcares y sodio", "Sodio"];
+  const DEFAULT_FUENTES = "Productos envasados: tabla nutricional de su etiqueta.\nAlimentos frescos: USDA FoodData Central (fdc.nal.usda.gov).\nLímites de los sellos: Ministerio de Salud, Ley 20.606 de Etiquetado de Alimentos.\nRecomendación de sodio: Organización Mundial de la Salud (OMS).\nGuías del curso y Guía de conceptos de la feria.";
+
+  const EXAMPLE = {
+    plato: "fideos con salsa", integrantes: "Integrantes 1, 2, 3 y 4", curso: "3° medio ___",
+    c1_o: "Fideos blancos", c1_od: "carbohidrato refinado", c1_m: "Fideos integrales", c1_md: "conservan el salvado (fibra)", c1_bio: "Carbohidratos", c1_dato: "Fibra: 2,4 → 7,2 g",
+    c1_est: "El blanco es refinado: perdió el salvado. El integral conserva la fibra, un polisacárido que no digerimos.",
+    c1_ef: "La fibra hace más lenta la absorción del almidón: la glicemia sube de a poco y hay más saciedad.",
+    c2_o: "Salsa en sachet", c2_od: "sal y azúcar agregadas", c2_m: "Salsa casera", c2_md: "tomate, cebolla y zanahoria", c2_bio: "Azúcares y sodio", c2_dato: "Sin azúcar añadida, menos sal",
+    c2_est: "El sachet trae azúcares y sal agregados. La casera solo tiene el azúcar natural de las verduras, junto con su fibra.",
+    c2_ef: "Menos sodio y absorción más lenta del azúcar. No usamos edulcorantes: la zanahoria endulza.",
+    c3_o: "Vienesas", c3_od: "grasa saturada y sodio", c3_m: "Pechuga de pollo", c3_md: "proteína completa, poca grasa", c3_bio: "Proteínas y grasas", c3_dato: "Grasa saturada: 7,5 → 1,0 g",
+    c3_est: "Ambos son proteína completa (9 aminoácidos esenciales). Las vienesas traen mucha grasa saturada: cadenas rectas, sin enlaces dobles.",
+    c3_ef: "La grasa saturada sube el colesterol LDL. El pollo da casi el triple de proteína con muy poca grasa.",
+    c4_on: true,
+    c4_o: "Sin aceite agregado", c4_od: "la grasa viene de las vienesas", c4_m: "Aceite de oliva", c4_md: "grasa insaturada cis", c4_bio: "Lípidos", c4_dato: "Cuida el corazón (baja el LDL)",
+    c4_est: "Grasa insaturada cis: el enlace doble dobla la cadena y la hace líquida.",
+    c4_ef: "Ayuda a bajar el LDL. Evitamos margarina o manteca, que pueden aportar grasas trans (de la hidrogenación) o saturadas.",
+    resultado: "−72 % sodio · −74 % grasa saturada · 2,6 veces más fibra · el doble de proteína",
+    porcion: "1 plato por persona: 80 g de fideos crudos + 100 g de carne + ~100 g de salsa en ambos.",
+    n_prot_o: "22", n_prot_m: "44", n_sat_o: "7,8", n_sat_m: "2,1", n_azu_o: "9,9", n_azu_m: "8,2", n_fib_o: "3,9", n_fib_m: "10", n_sod_o: "1434", n_sod_m: "397",
+    concl1: "El original tiene casi ¾ del sodio recomendado para un día (OMS: 2.000 mg); el mejorado, solo ⅕.",
+    concl2: "Bajan las grasas saturadas y sube la fibra gracias al pollo, el aceite de oliva y los fideos integrales.",
+    concl3: "No comparamos calorías: el plato mejorado no busca alimentar menos, sino nutrir mejor.",
+    porciones: "4",
+    ro_ing: "320 g de fideos blancos\n2 sachets de salsa de tomate (400 g)\n8 vienesas",
+    ro_pasos: "Cocer los fideos y colarlos.\nCalentar las vienesas en rodajas dentro de la salsa.\nServir.",
+    rm_ing: "320 g de fideos integrales (reemplaza fideos blancos)\n4 tomates, 1 cebolla, 1 zanahoria, 2 ajos (reemplazan la salsa en sachet)\n4 cdtas. de aceite de oliva · ½ cdta. de sal\n400 g de pechuga de pollo (reemplaza vienesas)",
+    rm_pasos: "Sofreír cebolla, zanahoria y ajo en el aceite (5 min).\nAgregar tomate y sal; cocinar 15 min.\nAgregar el pollo; cocinar 10 min, sin partes rosadas.\nServir sobre los fideos integrales cocidos.",
+    a_ing: "Fideos, salsa de tomate en sachet, vienesas", a_ale: "Gluten. Las vienesas pueden contener soya y leche.",
+    b_ing: "Fideos integrales, tomate, cebolla, zanahoria, ajo, aceite de oliva, sal, pollo", b_ale: "Gluten",
+    e1_nom: "vienesas", e1_s_sat: true, e1_s_sod: true, e2_nom: "salsa en sachet", e2_s_sod: true,
+    e_nota: "El plato mejorado no usa ningún producto con sellos.",
+    fuentes: "Productos envasados: tabla nutricional de su etiqueta.\nVerduras, aceite de oliva y pollo: USDA FoodData Central (fdc.nal.usda.gov).\nLímites de los sellos: Ministerio de Salud, Ley 20.606 de Etiquetado de Alimentos.\nRecomendación de sodio: Organización Mundial de la Salud (OMS).\nGuías del curso: carbohidratos, grasas saturadas e insaturadas, grasas cis y trans, proteínas, endulzantes.",
+  };
+  const BLANK = { e_nota: "El plato mejorado no usa ningún producto con sellos.", fuentes: DEFAULT_FUENTES, c4_on: false };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const cap = t => t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+  const lines = s => String(s || "").split(/\n+/).map(x => x.trim()).filter(Boolean);
+
+  const cambiosEl = $("#cambios");
+  for (let i = 1; i <= 4; i++) {
+    const opt = i === 4;
+    const d = document.createElement("div");
+    d.className = "cambio"; d.id = `cambio${i}`;
+    d.innerHTML = `
+      <h3>${opt ? `<label class="toggle"><input type="checkbox" id="c4_on"> Cambio 4 (opcional)</label>` : `Cambio ${i}`}</h3>
+      <div class="row">
+        <div class="f"><label for="c${i}_o">Original <span class="req">*</span></label><input type="text" id="c${i}_o" maxlength="26" data-req data-c="${i}" placeholder="Ingrediente original"></div>
+        <div class="f"><label for="c${i}_m">Mejorado <span class="req">*</span></label><input type="text" id="c${i}_m" maxlength="26" data-req data-c="${i}" placeholder="Ingrediente nuevo"></div>
+      </div>
+      <div class="row">
+        <div class="f"><label for="c${i}_od">Qué tiene el original <span class="req">*</span></label><input type="text" id="c${i}_od" maxlength="34" data-req data-c="${i}" placeholder="Ej.: carbohidrato refinado"></div>
+        <div class="f"><label for="c${i}_md">Qué tiene el mejorado <span class="req">*</span></label><input type="text" id="c${i}_md" maxlength="34" data-req data-c="${i}" placeholder="Ej.: conserva la fibra"></div>
+      </div>
+      <div class="row">
+        <div class="f"><label for="c${i}_bio">Biomolécula <span class="req">*</span></label><input type="text" id="c${i}_bio" maxlength="34" data-req data-c="${i}" list="bios" placeholder="Elige o escribe"></div>
+        <div class="f"><label for="c${i}_dato">Dato clave <span class="req">*</span></label><input type="text" id="c${i}_dato" maxlength="34" data-req data-c="${i}" placeholder="Ej.: Fibra: 2,4 → 7,2 g"></div>
+      </div>
+      <div class="subt">Para la sección 2</div>
+      <div class="f"><label for="c${i}_est">Estructura <span class="req">*</span><span class="cnt" data-cnt="c${i}_est"></span></label><textarea id="c${i}_est" rows="3" maxlength="150" data-req data-c="${i}" placeholder="¿Qué tiene de distinto la molécula? Ej.: enlaces dobles, fibra, aminoácidos esenciales…"></textarea></div>
+      <div class="f"><label for="c${i}_ef">Efecto en el cuerpo <span class="req">*</span><span class="cnt" data-cnt="c${i}_ef"></span></label><textarea id="c${i}_ef" rows="3" maxlength="150" data-req data-c="${i}" placeholder="¿Qué le pasa al cuerpo? Ej.: glicemia, colesterol LDL, saciedad…"></textarea></div>`;
+    cambiosEl.appendChild(d);
+  }
+  const bioList = document.createElement("datalist"); bioList.id = "bios";
+  bioList.innerHTML = BIOS.map(b => `<option value="${esc(b)}">`).join(""); document.body.appendChild(bioList);
+
+  $("#nutBody").innerHTML = NUT.map(n => `<tr><th scope="row">${n.label}</th>
+    <td><input type="text" id="n_${n.k}_o" inputmode="decimal" maxlength="8" data-req aria-label="${n.label} original"></td>
+    <td><input type="text" id="n_${n.k}_m" inputmode="decimal" maxlength="8" data-req aria-label="${n.label} mejorado"></td>
+    <td class="chg" id="chg_${n.k}">—</td></tr>`).join("");
+
+  $("#etiquetas").innerHTML = [1, 2].map(j => `
+    <div class="cambio">
+      <h3>Producto ${j}${j === 2 ? " (opcional)" : ""}</h3>
+      <div class="f"><label for="e${j}_nom">Nombre del producto ${j === 1 ? '<span class="req">*</span>' : ""}</label><input type="text" id="e${j}_nom" maxlength="30" ${j === 1 ? "data-req" : ""} placeholder="Ej.: vienesas"></div>
+      <div class="sellos-pick">${SELLOS.map(s => `<label class="chip"><input type="checkbox" id="e${j}_s_${s.k}"> ${s.label}</label>`).join("")}</div>
+    </div>`).join("");
+
+  const fields = () => [...document.querySelectorAll("#form input, #form textarea")].filter(el => el.id && el.type !== "file");
+  function readForm() { const s = {}; fields().forEach(el => { s[el.id] = el.type === "checkbox" ? el.checked : el.value; }); return s; }
+  function writeForm(s) { fields().forEach(el => { const v = s[el.id]; if (el.type === "checkbox") el.checked = !!v; else el.value = v ?? ""; }); }
+  let isExample = false;
+  function save(s) { try { localStorage.setItem(STORE, JSON.stringify({ s, isExample })); } catch (e) {} }
+  function load() { try { const r = JSON.parse(localStorage.getItem(STORE) || "null"); return r && r.s ? r : null; } catch (e) { return null; } }
+
+  const num = v => { const t = String(v || "").trim().replace(/\s/g, ""); if (!t) return null; const c = t.replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", "."); const n = Number(c); return Number.isFinite(n) ? n : null; };
+  const fmt = (n, d) => n.toLocaleString("es-CL", { minimumFractionDigits: 0, maximumFractionDigits: d });
+  function change(o, m) {
+    if (o == null || m == null) return { t: "—", mag: 0 };
+    if (o === m) return { t: "igual", mag: 0 };
+    if (o === 0) return { t: m > 0 ? "aumenta" : "—", mag: 1 };
+    if (m < o) { const p = Math.round((o - m) / o * 100); return { t: `−${p} %`, mag: (o - m) / o }; }
+    const r = m / o;
+    if (r >= 1.95 && r < 2.05) return { t: "el doble", mag: r - 1 };
+    if (r >= 2) return { t: `${fmt(r, 1)} veces más`, mag: r - 1 };
+    return { t: `+${Math.round((r - 1) * 100)} %`, mag: r - 1 };
+  }
+  const showNum = v => { const n = num(v); return n == null ? esc(v) : fmt(n, 1); };
+
+  function activeCambios(s) { return [1, 2, 3, 4].filter(i => i < 4 || s.c4_on); }
+  function missing(s) {
+    const miss = [];
+    document.querySelectorAll("#form [data-req]").forEach(el => {
+      const c = el.dataset.c;
+      if (c === "4" && !s.c4_on) { el.closest(".f").classList.remove("missing"); return; }
+      const empty = !String(el.value || "").trim();
+      const badNum = el.id.startsWith("n_") && !empty && num(el.value) == null;
+      el.closest(".f, td")?.classList.toggle("missing", empty || badNum);
+      if (empty || badNum) miss.push(el);
+    });
+    return miss;
+  }
+  const sectionOf = el => { const fs = el.closest("fieldset"); return fs ? fs.querySelector("h2").textContent : ""; };
+
+  function selloCanvas(text) {
+    const W = 70, sc = 3, cv = document.createElement("canvas");
+    cv.width = W * sc; cv.height = W * sc; cv.style.width = W + "px"; cv.style.height = W + "px";
+    const g = cv.getContext("2d"); g.scale(sc, sc);
+    const a = W * .3, b = W * .7; g.fillStyle = "#111"; g.beginPath();
+    [[a, 0], [b, 0], [W, a], [W, b], [b, W], [a, W], [0, b], [0, a]].forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fill();
+    g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle";
+    const ls = text.split("<br>"); const fs = ls.length > 2 ? 8.2 : 9;
+    g.font = `800 ${fs}px Inter, Arial, sans-serif`;
+    ls.forEach((l, i) => g.fillText(l, W / 2, W / 2 + (i - (ls.length - 1) / 2) * (fs + 1.5)));
+    return cv;
+  }
+
+  function sheets(s) {
+    const cs = activeCambios(s);
+    const plato = esc(s.plato || "nombre del plato");
+    const nrows = NUT.map(n => ({ n, o: num(s[`n_${n.k}_o`]), m: num(s[`n_${n.k}_m`]), ro: s[`n_${n.k}_o`], rm: s[`n_${n.k}_m`] }))
+      .map(r => ({ ...r, ch: change(r.o, r.m) }));
+    const top = [...nrows].sort((x, y) => y.ch.mag - x.ch.mag).slice(0, 3).filter(r => r.ch.mag > 0).map(r => r.n.k);
+    const esq = cs.map(i => `
+      <div class="box"><b>${esc(s[`c${i}_o`])}</b><span>${esc(s[`c${i}_od`])}</span></div>
+      <div class="arr"><div class="bio">${esc(s[`c${i}_bio`])}</div><div class="line"><i></i><em></em></div><div class="dato">${esc(s[`c${i}_dato`])}</div></div>
+      <div class="box m"><b>${esc(s[`c${i}_m`])}</b><span>${esc(s[`c${i}_md`])}</span></div>`).join("");
+    const why = cs.map(i => `<div class="cb"><b class="t">${esc(s[`c${i}_o`])} → ${esc(s[`c${i}_m`])}</b><span class="bio">${esc(s[`c${i}_bio`])}</span>
+      <p><b>Estructura:</b> ${esc(s[`c${i}_est`])}</p><p><b>Efecto:</b> ${esc(s[`c${i}_ef`])}</p></div>`).join("");
+    const nut = nrows.map(r => `<tr class="${top.includes(r.n.k) ? "hl" : ""}"><td>${r.n.label}</td><td class="c">${showNum(r.ro)}</td><td class="c">${showNum(r.rm)}</td><td class="c">${r.ch.t}</td></tr>`).join("");
+    const concl = [s.concl1, s.concl2, s.concl3].filter(x => String(x || "").trim()).map(x => `<li>${esc(x)}</li>`).join("");
+    const ul = t => `<ul>${lines(t).map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    const ol = t => `<ol>${lines(t).map(x => `<li>${esc(x)}</li>`).join("")}</ol>`;
+    const etiq = [1, 2].filter(j => String(s[`e${j}_nom`] || "").trim()).map(j => {
+      const has = SELLOS.filter(x => s[`e${j}_s_${x.k}`]);
+      return `<div class="paste"><div><b>Pegar aquí la etiqueta de ${esc(s[`e${j}_nom`])}</b>con su tabla nutricional${has.length ? (has.length > 1 ? " y sus sellos encerrados en un círculo" : " y su sello encerrado en un círculo") : ""}<div class="sl" data-sellos="${has.map(x => x.k).join(",")}"></div></div></div>`;
+    }).join("");
+    const p1 = `<div class="sheet">
+      <div class="sh"><div><h1>Mismo plato, mejor nutrición:<br>${plato}</h1><div class="sub">Feria Científico-Gastronómica · Biología Celular y Molecular</div></div>
+      <div class="meta"><b>Equipo:</b> ${esc(s.integrantes)}<br><b>Curso:</b> ${esc(s.curso)}<br>Anverso</div></div>
+      <section><h2><span class="n">1</span> Los dos platos y sus ${cs.length} cambios <span class="tag">Criterio 1</span></h2>
+        <div class="esq"><div class="colh">PLATO ORIGINAL</div><div></div><div class="colh m">PLATO MEJORADO</div>${esq}<div class="res">Por plato: ${esc(s.resultado)}</div></div></section>
+      <section><h2><span class="n">2</span> Por qué cada cambio es mejor <span class="tag">Criterios 2 y 4</span></h2><div class="g2">${why}</div></section>
+      <section><h2><span class="n">3</span> Comparación nutricional <span class="tag">Criterio 3</span></h2>
+        <table><tr><th>Nutriente</th><th class="c">Original</th><th class="c">Mejorado</th><th class="c">Cambio</th></tr>${nut}</table>
+        <p class="note" style="margin:5px 0 4px">${esc(s.porcion)} En esta feria no calculamos calorías.</p>
+        <b>Conclusiones:</b><ul>${concl}</ul></section>
+      <div class="foot">Sigue en el reverso: recetas, alérgenos, etiquetas, degustación y fuentes</div></div>`;
+    const p2 = `<div class="sheet">
+      <div class="sh"><div><h1 style="font-size:18.5px">${cap(plato)} · reverso</h1></div><div class="meta"><b>Equipo:</b> ${esc(s.integrantes)}<br>Reverso</div></div>
+      <section><h2><span class="n">4</span> Recetas (${esc(s.porciones || "_")} personas) <span class="tag">Requisito: receta de ambos platos</span></h2>
+        <div class="rec"><div><h3>Plato original</h3>${ul(s.ro_ing)}${ol(s.ro_pasos)}</div><div><h3>Plato mejorado</h3>${ul(s.rm_ing)}${ol(s.rm_pasos)}</div></div></section>
+      <section><h2><span class="n">5</span> Ingredientes y alérgenos <span class="tag">Criterio 5 · Requisito</span></h2>
+        <table><tr><th style="width:20%"></th><th>Plato A · original</th><th>Plato B · mejorado</th></tr>
+        <tr><td><b>Ingredientes</b></td><td>${esc(s.a_ing)}</td><td>${esc(s.b_ing)}</td></tr>
+        <tr><td><b>Alérgenos</b></td><td>${esc(s.a_ale)}</td><td>${esc(s.b_ale)}</td></tr></table></section>
+      <section><h2><span class="n">6</span> Etiquetas del plato original <span class="tag">Criterio 3 · Requisito</span></h2>
+        <div class="g2">${etiq}</div>${String(s.e_nota || "").trim() ? `<p class="note" style="margin:5px 0 0">${esc(s.e_nota)}</p>` : ""}</section>
+      <section><h2><span class="n">7</span> Resultado de la degustación <span class="tag">Criterio 6 · se completa al final de la feria</span></h2>
+        <table style="width:70%"><tr><th>Resultado</th><th class="c" style="width:35%">N.° de personas</th></tr>
+        <tr><td>Prefirieron A (original)</td><td></td></tr><tr><td>Prefirieron B (mejorado)</td><td></td></tr><tr><td>Les dio igual</td><td></td></tr><tr><td><b>Total</b></td><td></td></tr></table>
+        <div class="bl2"><b>Conclusión:</b><div class="blank"></div></div><div class="bl2"><div class="blank"></div></div></section>
+      <section><h2><span class="n">8</span> Fuentes</h2>${ul(s.fuentes)}</section>
+      <div class="foot">Feria Científico-Gastronómica · Biología Celular y Molecular · Liceo Emblemático Octavio Palma Pérez (A-1)</div></div>`;
+    return [p1, p2];
+  }
+  function mount(container, html) {
+    container.innerHTML = html;
+    container.querySelectorAll(".sl").forEach(el => (el.dataset.sellos || "").split(",").filter(Boolean)
+      .forEach(k => { const s = SELLOS.find(x => x.k === k); if (s) el.appendChild(selloCanvas(s.t)); }));
+    return container.firstElementChild;
+  }
+
+  const pagesEl = $("#pages");
+  let lastOver = [false, false];
+  function renderPreview(s) {
+    const [p1, p2] = sheets(s);
+    pagesEl.innerHTML = "";
+    const avail = Math.max(240, pagesEl.clientWidth - 12);
+    const k = Math.min(1, avail / 816);
+    lastOver = [p1, p2].map((h, idx) => {
+      const fr = document.createElement("div"); fr.className = "pageframe";
+      fr.style.width = (816 * k) + "px"; fr.style.height = (1247 * k) + "px";
+      const sc = document.createElement("div"); sc.className = "scaler"; sc.style.transform = `scale(${k})`;
+      fr.appendChild(sc); pagesEl.appendChild(fr);
+      const sh = mount(sc, h);
+      const sheetRect = sh.offsetHeight;
+      const last = sh.lastElementChild;
+      const over = sh.scrollHeight > sh.clientHeight + 1 || (last && (last.offsetTop + last.offsetHeight) > sheetRect - 30);
+      if (over) { const b = document.createElement("div"); b.className = "over"; b.textContent = `El texto no cabe en el ${idx ? "reverso" : "anverso"}: acorta algunos campos`; fr.appendChild(b); }
+      return over;
+    });
+  }
+
+  const statusEl = $("#status");
+  function banner(kind, html) { statusEl.innerHTML = `<div class="banner ${kind}">${html}</div>`; }
+  function refreshBanner(extra) {
+    if (extra) return banner(extra.kind, extra.html);
+    if (isExample) return banner("example", `<p><b>Estás viendo el ejemplo del profesor.</b> Úsalo como guía. Cuando quieras hacer la hoja de tu equipo, pulsa «Empezar mi hoja».</p><button type="button" class="primary" data-act="new">Empezar mi hoja</button>`);
+    statusEl.innerHTML = "";
+  }
+  statusEl.addEventListener("click", e => { const a = e.target.closest("[data-act]"); if (a?.dataset.act === "new") askNew(); });
+
+  let t;
+  function update() {
+    const s = readForm();
+    $("#cambio4").classList.toggle("off", !s.c4_on);
+    NUT.forEach(n => { $(`#chg_${n.k}`).textContent = change(num(s[`n_${n.k}_o`]), num(s[`n_${n.k}_m`])).t; });
+    document.querySelectorAll("[data-cnt]").forEach(c => { const el = document.getElementById(c.dataset.cnt); c.textContent = `${el.value.length}/${el.maxLength}`; });
+    clearTimeout(t); t = setTimeout(() => { renderPreview(s); save(s); }, 180);
+  }
+  $("#form").addEventListener("input", e => { e.target.closest(".f, td")?.classList.remove("missing"); if (isExample) { isExample = false; refreshBanner(); } update(); });
+  $("#form").addEventListener("change", update);
+  document.querySelectorAll("textarea[data-lines]").forEach(ta => ta.addEventListener("input", () => {
+    const max = +ta.dataset.lines; const ls = ta.value.split("\n"); if (ls.length > max) ta.value = ls.slice(0, max).join("\n");
+  }));
+  window.addEventListener("resize", () => renderPreview(readForm()));
+
+  const dlg = $("#confirmNew");
+  function askNew() { if (isExample) return doNew(); try { dlg.showModal(); } catch (e) { dlg.setAttribute("open", ""); } }
+  function doNew() { isExample = false; writeForm(BLANK); refreshBanner(); update(); try { dlg.close(); } catch (e) { dlg.removeAttribute("open"); } $("#plato").focus(); }
+  $("#btnNew").addEventListener("click", askNew);
+  $("#cnCancel").addEventListener("click", () => { try { dlg.close(); } catch (e) { dlg.removeAttribute("open"); } });
+  $("#cnOk").addEventListener("click", doNew);
+
+  async function offer(filename, blob) {
+    const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+    return { status: "saved" };
+  }
+  const slug = x => String(x || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 40) || "hoja";
+  function explainErr(e, what) {
+    refreshBanner({ kind: "problem", html: `<p>No se pudo descargar ${what}. Recarga la página e inténtalo de nuevo. Tu trabajo sigue guardado aquí.</p>` });
+  }
+
+  async function makePdf() {
+    const s = readForm();
+    const miss = missing(s);
+    if (miss.length) {
+      const secs = [...new Set(miss.map(sectionOf))];
+      refreshBanner({ kind: "problem", html: `<p><b>Faltan ${miss.length} ${miss.length === 1 ? "campo" : "campos"} por completar</b> (marcados en color). Revisa:<ul>${secs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></p><button type="button" id="goMiss">Ir al primero</button>` });
+      $("#goMiss").addEventListener("click", () => { setView("form"); miss[0].scrollIntoView({ block: "center", behavior: "smooth" }); miss[0].focus({ preventScroll: true }); });
+      return;
+    }
+    renderPreview(s);
+    if (lastOver.some(Boolean)) {
+      refreshBanner({ kind: "problem", html: `<p><b>El texto no cabe en la hoja</b> (${lastOver[0] ? "anverso" : ""}${lastOver[0] && lastOver[1] ? " y " : ""}${lastOver[1] ? "reverso" : ""}). Acorta los textos más largos y vuelve a intentarlo. Mira la vista previa para ver dónde se corta.</p>` });
+      return;
+    }
+    if (!window.html2canvas || !window.jspdf) { refreshBanner({ kind: "problem", html: `<p>No se pudo cargar la herramienta que arma el PDF. Revisa tu conexión a internet y recarga la página.</p>` }); return; }
+    const btns = [$("#btnPdf"), $("#btnPdf2")]; btns.forEach(b => { b.disabled = true; b.textContent = "Armando el PDF…"; });
+    try {
+      try { await document.fonts.ready; } catch (e) {}
+      const capEl = $("#capture"); capEl.innerHTML = "";
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ unit: "mm", format: [216, 330], orientation: "portrait", compress: true });
+      const [p1, p2] = sheets(s);
+      for (const [idx, h] of [p1, p2].entries()) {
+        const holder = document.createElement("div"); capEl.appendChild(holder);
+        const sh = mount(holder, h);
+        const canvas = await html2canvas(sh, { scale: 2.2, backgroundColor: "#ffffff", useCORS: true, logging: false, width: 816, height: 1247, windowWidth: 1200 });
+        if (idx) pdf.addPage([216, 330], "portrait");
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 216, 330, undefined, "FAST");
+      }
+      capEl.innerHTML = "";
+      const blob = pdf.output("blob");
+      const name = `Hoja_${slug(s.plato)}_${slug(s.curso)}.pdf`;
+      await offer(name, blob);
+      refreshBanner({ kind: "done", html: `<p><b>Listo.</b> Se descargó «${esc(name)}». Imprímelo en hoja de oficio, por ambos lados.</p>` });
+    } catch (e) { explainErr(e, "el PDF"); }
+    finally { btns.forEach(b => { b.disabled = false; b.textContent = "Descargar PDF"; }); }
+  }
+  $("#btnPdf").addEventListener("click", makePdf);
+  $("#btnPdf2").addEventListener("click", makePdf);
+
+  $("#btnSaveDraft").addEventListener("click", async () => {
+    const s = readForm();
+    const name = `Borrador_${slug(s.plato)}_${slug(s.curso)}.json`;
+    try { await offer(name, new Blob([JSON.stringify({ app: STORE, s }, null, 1)], { type: "application/json" }));
+      refreshBanner({ kind: "done", html: `<p>Borrador guardado como «${esc(name)}». Con «Abrir borrador» lo puedes cargar en otro computador o compartirlo con tu equipo.</p>` });
+    } catch (e) { explainErr(e, "el borrador"); }
+  });
+  $("#btnOpenDraft").addEventListener("click", () => $("#draftFile").click());
+  $("#draftFile").addEventListener("change", async e => {
+    const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+    try { const j = JSON.parse(await f.text()); if (!j || !j.s) throw 0; isExample = false; writeForm({ ...BLANK, ...j.s }); update();
+      refreshBanner({ kind: "done", html: `<p>Borrador «${esc(f.name)}» cargado.</p>` });
+    } catch (er) { refreshBanner({ kind: "problem", html: `<p>Ese archivo no es un borrador de esta hoja. Elige el archivo .json que guardaste con «Guardar borrador».</p>` }); }
+  });
+
+  function setView(v) { document.body.dataset.view = v; $("#tabForm").setAttribute("aria-selected", v === "form"); $("#tabPrev").setAttribute("aria-selected", v === "preview"); if (v === "preview") renderPreview(readForm()); }
+  $("#tabForm").addEventListener("click", () => setView("form"));
+  $("#tabPrev").addEventListener("click", () => setView("preview"));
+
+  const saved = load();
+  if (saved) { isExample = !!saved.isExample; writeForm({ ...BLANK, ...saved.s }); }
+  else { isExample = true; writeForm(EXAMPLE); }
+  setView("form");
+  refreshBanner();
+  update();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderPreview(readForm()));
+})();
+</script>
+
+</body>
+</html>
