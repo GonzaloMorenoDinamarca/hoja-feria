@@ -126,7 +126,7 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 .sheet .sh { border-bottom: 2.5px solid #111; padding-bottom: 11px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
 .sheet h1 { font-size: 22.5px; margin: 0; line-height: 1.1; font-weight: 800; letter-spacing: -.01em; }
 .sheet .sub { font-size: 12.5px; color: #333; margin-top: 4px; }
-.sheet .meta { font-size: 11.4px; text-align: right; color: #222; line-height: 1.45; max-width: 46%; }
+.sheet .meta { font-size: 11.4px; text-align: right; color: #222; line-height: 1.45; max-width: 46%; flex: none; white-space: nowrap; }
 .sheet .team { font-size: 11.6px; color: #222; margin-top: -3px; }
 .sheet h2 { font-size: 14.5px; margin: 0 0 7px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
 .sheet h2 .n { background: #111; color: #fff; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 3px; flex: none; }
@@ -196,7 +196,7 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 
       <fieldset class="card">
         <legend><div class="head"><span class="num">0</span><h2>Datos del equipo</h2></div></legend>
-        <div class="f"><label for="plato">Nombre del plato <span class="req">*</span></label><input type="text" id="plato" maxlength="40" data-req placeholder="Ej.: fideos con salsa"></div>
+        <div class="f"><label for="plato">Nombre del plato <span class="req">*</span><span class="cnt" data-cnt="plato"></span></label><input type="text" id="plato" maxlength="90" data-req placeholder="Ej.: fideos con salsa"></div>
         <div class="f"><label for="integrantes">Integrantes <span class="req">*</span><span class="cnt" data-cnt="integrantes"></span></label><textarea id="integrantes" rows="3" maxlength="240" data-req placeholder="Nombres y apellidos, separados por coma"></textarea></div>
         <div class="f"><label for="curso">Curso <span class="req">*</span></label><input type="text" id="curso" maxlength="20" data-req placeholder="Ej.: 3° medio B"></div>
       </fieldset>
@@ -438,6 +438,7 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
     const cs = activeCambios(s);
     const plato = esc(s.plato || "nombre del plato");
     const team = esc(lines(s.integrantes).join(", "));
+    const longT = String(s.plato || "").length > 45;
     const nrows = NUT.map(n => ({ n, o: num(s[`n_${n.k}_o`]), m: num(s[`n_${n.k}_m`]), ro: s[`n_${n.k}_o`], rm: s[`n_${n.k}_m`] }))
       .map(r => ({ ...r, ch: change(r.o, r.m) }));
     const top = [...nrows].sort((x, y) => y.ch.mag - x.ch.mag).slice(0, 3).filter(r => r.ch.mag > 0).map(r => r.n.k);
@@ -456,7 +457,7 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
       return `<div class="paste"><div><b>Pegar aquí la etiqueta de ${esc(s[`e${j}_nom`])}</b>con su tabla nutricional${has.length ? (has.length > 1 ? " y sus sellos encerrados en un círculo" : " y su sello encerrado en un círculo") : ""}<div class="sl" data-sellos="${has.map(x => x.k).join(",")}"></div></div></div>`;
     }).join("");
     const p1 = `<div class="sheet">
-      <div class="sh"><div><h1>Mismo plato, mejor nutrición:<br>${plato}</h1><div class="sub">Feria Científico-Gastronómica · Biología Celular y Molecular</div></div>
+      <div class="sh"><div><h1${longT ? ' style="font-size:19px"' : ""}>Mismo plato, mejor nutrición:<br>${plato}</h1><div class="sub">Feria Científico-Gastronómica · Biología Celular y Molecular</div></div>
       <div class="meta"><b>Curso:</b> ${esc(s.curso)}<br>Anverso</div></div>
       <div class="team"><b>Integrantes:</b> ${team}</div>
       <section><h2><span class="n">1</span> Los dos platos y sus ${cs.length} cambios <span class="tag">Criterio 1</span></h2>
