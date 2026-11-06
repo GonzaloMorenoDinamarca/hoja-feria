@@ -87,9 +87,13 @@ input[type=text], textarea, select { font: inherit; font-size: 1rem; color: var(
 textarea { resize: vertical; min-height: 64px; line-height: 1.35; }
 .missing input, .missing textarea, .missing select { border-color: var(--warn); background: var(--warn-soft); }
 .small { font-size: .82rem; color: var(--ink-soft); }
+.fitmsg { font-size: .82rem; font-weight: 700; color: var(--warn); }
+.toolong input, .toolong textarea { border-color: var(--warn); background: var(--warn-soft); }
+.f label .cnt.near { color: var(--warn); font-weight: 700; }
 .cambio { border: 1.5px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 .cambio h3 { margin: 0; font-size: 1rem; font-family: var(--f-display); font-weight: 800; display: flex; gap: 8px; align-items: center; }
 .cambio.off > :not(h3) { display: none; }
+.cambio.hide { display: none; }
 .subt { font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); font-weight: 700; }
 table.nut { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
 .nutwrap { overflow-x: auto; }
@@ -120,20 +124,20 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
 
 #capture { position: fixed; left: -12000px; top: 0; }
-.sheet { width: 816px; height: 1247px; background: #fff; color: #111; font-family: "Inter", Arial, sans-serif; font-size: 12.2px; line-height: 1.28; padding: 45px 49px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-.sheet * { box-sizing: border-box; }
+.sheet { width: 816px; height: 1247px; background: #fff; color: #111; font-family: "Inter", Arial, sans-serif; font-size: 12.2px; line-height: 1.28; padding: 45px 49px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.sheet * { box-sizing: border-box; overflow-wrap: anywhere; }
 .sheet > * { flex-shrink: 0; }
 .sheet .sh { border-bottom: 2.5px solid #111; padding-bottom: 11px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
 .sheet h1 { font-size: 22.5px; margin: 0; line-height: 1.1; font-weight: 800; letter-spacing: -.01em; }
 .sheet .sub { font-size: 12.5px; color: #333; margin-top: 4px; }
-.sheet .meta { font-size: 11.4px; text-align: right; color: #222; line-height: 1.45; max-width: 46%; flex: none; white-space: nowrap; }
+.sheet .meta { font-size: 11.4px; text-align: right; color: #222; line-height: 1.45; flex: 0 0 190px; }
 .sheet .team { font-size: 11.6px; color: #222; margin-top: -3px; }
 .sheet h2 { font-size: 14.5px; margin: 0 0 7px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
 .sheet h2 .n { background: #111; color: #fff; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 3px; flex: none; }
 .sheet h2 .tag { font-weight: 400; font-size: 10.5px; color: #555; margin-left: auto; }
 .sheet section { border: 1px solid #999; border-radius: 5px; padding: 9px 12px; }
 .sheet table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.sheet th, .sheet td { border: 1px solid #888; padding: 3px 7px; text-align: left; vertical-align: top; }
+.sheet th, .sheet td { border: 1px solid #888; padding: 2px 7px; text-align: left; vertical-align: top; }
 .sheet th { background: #222; color: #fff; font-weight: 600; }
 .sheet td.c, .sheet th.c { text-align: center; }
 .sheet tr.hl td { font-weight: 700; background: #eee; }
@@ -146,10 +150,10 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 .sheet li { margin: 2px 0; }
 .sheet .note { font-size: 10.8px; color: #444; }
 .sheet .foot { margin-top: auto; font-size: 10.2px; color: #555; text-align: center; }
-.sheet .esq { display: grid; grid-template-columns: 236px 1fr 236px; row-gap: 10px; align-items: center; }
+.sheet .esq { display: grid; grid-template-columns: 236px 1fr 236px; row-gap: 6px; align-items: center; }
 .sheet .esq .colh { font-weight: 700; font-size: 11.5px; text-align: center; color: #555; padding-bottom: 2px; }
 .sheet .esq .colh.m { color: #111; }
-.sheet .box { border: 1.3px solid #777; border-radius: 7px; padding: 7px 11px; min-height: 52px; display: flex; flex-direction: column; justify-content: center; }
+.sheet .box { border: 1.3px solid #777; border-radius: 7px; padding: 5px 11px; min-height: 44px; display: flex; flex-direction: column; justify-content: center; }
 .sheet .box.m { background: #e9e9e9; border: 2.2px solid #111; }
 .sheet .box b { font-size: 12.8px; }
 .sheet .box span { font-size: 11px; color: #444; }
@@ -163,13 +167,24 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 .sheet .res { grid-column: 1 / -1; background: #111; color: #fff; border-radius: 6px; padding: 7px 12px; text-align: center; font-weight: 700; font-size: 12.2px; }
 .sheet .rec { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .sheet .rec h3 { font-size: 12.8px; margin: 0 0 3px; }
-.sheet .paste { border: 1.8px dashed #555; border-radius: 5px; height: 196px; display: flex; align-items: center; justify-content: center; text-align: center; color: #444; font-size: 11.6px; padding: 14px; }
+.sheet .paste { border: 1.8px dashed #555; border-radius: 5px; height: 148px; display: flex; align-items: center; justify-content: center; text-align: center; color: #444; font-size: 11.6px; padding: 14px; }
 .sheet .paste b { display: block; font-size: 12.8px; color: #111; margin-bottom: 3px; }
 .sheet .paste .sl { display: flex; gap: 6px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
 .sheet .blank { border-bottom: 1px solid #666; height: 15px; }
 .sheet .bl2 { display: flex; gap: 6px; align-items: flex-end; margin-top: 8px; }
 .sheet .bl2 b { flex: none; }
 .sheet .bl2 .blank { flex: 1; }
+.sheet.many .esq { row-gap: 3px; }
+.sheet.many .box { min-height: 32px; padding: 1px 10px; line-height: 1.2; }
+.sheet.many .box b { font-size: 12px; }
+.sheet.many .box span { font-size: 10.4px; }
+.sheet.many .arr { line-height: 1.12; }
+.sheet.many .arr .bio { font-size: 10.4px; margin-bottom: 0; }
+.sheet.many .arr .dato { font-size: 11.2px; margin-top: 1px; }
+.sheet.many .arr .line em { border-top-width: 4px; border-bottom-width: 4px; }
+.sheet.many .g2 { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.sheet.many .cb { font-size: 11.2px; padding: 6px 8px; }
+.sheet.many .cb b.t { font-size: 11.8px; }
 </style>
 
 <header class="top">
@@ -203,9 +218,10 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 
       <fieldset class="card">
         <legend><div class="head"><span class="num">1</span><h2>Los dos platos y sus cambios</h2><span class="crit">Criterio 1</span></div></legend>
-        <p class="help">Escribe al menos 3 cambios. Cada uno es un ingrediente del plato original que reemplazaron por otro más nutritivo, sin dejar de ser el mismo plato.</p>
+        <p class="help">Escribe al menos 3 cambios y hasta 6. Cada uno es un ingrediente o componente del plato original que reemplazaron por otro más nutritivo, sin dejar de ser el mismo plato. Para agregar uno, marca la casilla «Cambio 4», «Cambio 5» o «Cambio 6».</p>
+        <p class="note-free" id="manyNote" hidden>Con 5 o 6 cambios, la hoja muestra los recuadros más angostos: escriban «Estructura» y «Efecto» más breves (unos 90 caracteres cada uno). Si algo no cabe, el campo se marcará en rojo.</p>
         <div id="cambios"></div>
-        <div class="f"><label for="resultado">Resultado total por plato <span class="req">*</span><span class="cnt" data-cnt="resultado"></span></label><input type="text" id="resultado" maxlength="100" data-req placeholder="Ej.: −72 % sodio · 2,6 veces más fibra · el doble de proteína"></div>
+        <div class="f"><label for="resultado">Resultado total por plato <span class="req">*</span><span class="cnt" data-cnt="resultado"></span></label><input type="text" id="resultado" maxlength="80" data-req placeholder="Ej.: −72 % sodio · 2,6 veces más fibra · el doble de proteína"></div>
         <p class="small">Usa los resultados de tu tabla (sección 3). Habla de nutrientes, no de calorías.</p>
       </fieldset>
 
@@ -217,39 +233,39 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
       <fieldset class="card">
         <legend><div class="head"><span class="num">3</span><h2>Comparación nutricional</h2><span class="crit">Criterio 3</span></div></legend>
         <p class="note-free">En esta feria no calculamos calorías. Comparen fibra, grasas saturadas, azúcares, sodio y proteínas.</p>
-        <div class="f"><label for="porcion">Porción que comparan <span class="req">*</span><span class="cnt" data-cnt="porcion"></span></label><input type="text" id="porcion" maxlength="120" data-req placeholder="Ej.: 1 plato por persona: 80 g de fideos crudos + 100 g de carne + ~100 g de salsa"></div>
+        <div class="f"><label for="porcion">Porción que comparan <span class="req">*</span><span class="cnt" data-cnt="porcion"></span></label><input type="text" id="porcion" maxlength="80" data-req placeholder="Ej.: 1 plato por persona: 80 g de fideos crudos + 100 g de carne + ~100 g de salsa"></div>
         <div class="nutwrap"><table class="nut">
           <thead><tr><th>Nutriente</th><th>Original</th><th>Mejorado</th><th>Cambio</th></tr></thead>
           <tbody id="nutBody"></tbody>
         </table></div>
         <p class="small">Escribe solo números (puedes usar coma decimal). El cambio se calcula solo y se destacan los 3 cambios más grandes.</p>
         <div class="subt">Conclusiones (3)</div>
-        <div class="f"><label for="concl1">Conclusión 1 <span class="req">*</span><span class="cnt" data-cnt="concl1"></span></label><input type="text" id="concl1" maxlength="125" data-req></div>
-        <div class="f"><label for="concl2">Conclusión 2 <span class="req">*</span><span class="cnt" data-cnt="concl2"></span></label><input type="text" id="concl2" maxlength="125" data-req></div>
-        <div class="f"><label for="concl3">Conclusión 3 <span class="req">*</span><span class="cnt" data-cnt="concl3"></span></label><input type="text" id="concl3" maxlength="125" data-req></div>
+        <div class="f"><label for="concl1">Conclusión 1 <span class="req">*</span><span class="cnt" data-cnt="concl1"></span></label><input type="text" id="concl1" maxlength="90" data-req></div>
+        <div class="f"><label for="concl2">Conclusión 2 <span class="req">*</span><span class="cnt" data-cnt="concl2"></span></label><input type="text" id="concl2" maxlength="90" data-req></div>
+        <div class="f"><label for="concl3">Conclusión 3 <span class="req">*</span><span class="cnt" data-cnt="concl3"></span></label><input type="text" id="concl3" maxlength="90" data-req></div>
       </fieldset>
 
       <fieldset class="card">
         <legend><div class="head"><span class="num">4</span><h2>Recetas</h2><span class="crit">Requisito</span></div></legend>
         <div class="f"><label for="porciones">Para cuántas personas <span class="req">*</span></label><input type="text" id="porciones" maxlength="3" inputmode="numeric" data-req placeholder="Ej.: 4"></div>
         <div class="subt">Plato original</div>
-        <div class="f"><label for="ro_ing">Ingredientes (uno por línea) <span class="req">*</span><span class="cnt" data-cnt="ro_ing"></span></label><textarea id="ro_ing" rows="4" maxlength="280" data-req data-lines="6"></textarea></div>
-        <div class="f"><label for="ro_pasos">Preparación (un paso por línea) <span class="req">*</span><span class="cnt" data-cnt="ro_pasos"></span></label><textarea id="ro_pasos" rows="4" maxlength="320" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="ro_ing">Ingredientes (uno por línea) <span class="req">*</span><span class="cnt" data-cnt="ro_ing"></span></label><textarea id="ro_ing" rows="4" maxlength="200" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="ro_pasos">Preparación (un paso por línea) <span class="req">*</span><span class="cnt" data-cnt="ro_pasos"></span></label><textarea id="ro_pasos" rows="4" maxlength="220" data-req data-lines="5"></textarea></div>
         <div class="subt">Plato mejorado</div>
-        <div class="f"><label for="rm_ing">Ingredientes (uno por línea) <span class="req">*</span><span class="cnt" data-cnt="rm_ing"></span></label><textarea id="rm_ing" rows="4" maxlength="280" data-req data-lines="6"></textarea></div>
-        <div class="f"><label for="rm_pasos">Preparación (un paso por línea) <span class="req">*</span><span class="cnt" data-cnt="rm_pasos"></span></label><textarea id="rm_pasos" rows="4" maxlength="320" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="rm_ing">Ingredientes (uno por línea) <span class="req">*</span><span class="cnt" data-cnt="rm_ing"></span></label><textarea id="rm_ing" rows="4" maxlength="200" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="rm_pasos">Preparación (un paso por línea) <span class="req">*</span><span class="cnt" data-cnt="rm_pasos"></span></label><textarea id="rm_pasos" rows="4" maxlength="220" data-req data-lines="5"></textarea></div>
         <p class="small">Indica entre paréntesis qué ingrediente reemplaza cada cambio, por ejemplo: «320 g de fideos integrales (reemplaza fideos blancos)».</p>
       </fieldset>
 
       <fieldset class="card">
         <legend><div class="head"><span class="num">5</span><h2>Ingredientes y alérgenos</h2><span class="crit">Criterio 5</span></div></legend>
         <div class="row">
-          <div class="f"><label for="a_ing">Plato A · ingredientes <span class="req">*</span></label><textarea id="a_ing" rows="3" maxlength="130" data-req></textarea></div>
-          <div class="f"><label for="b_ing">Plato B · ingredientes <span class="req">*</span></label><textarea id="b_ing" rows="3" maxlength="130" data-req></textarea></div>
+          <div class="f"><label for="a_ing">Plato A · ingredientes <span class="req">*</span></label><textarea id="a_ing" rows="3" maxlength="100" data-req></textarea></div>
+          <div class="f"><label for="b_ing">Plato B · ingredientes <span class="req">*</span></label><textarea id="b_ing" rows="3" maxlength="100" data-req></textarea></div>
         </div>
         <div class="row">
-          <div class="f"><label for="a_ale">Plato A · alérgenos <span class="req">*</span></label><input type="text" id="a_ale" maxlength="90" data-req placeholder="Ej.: gluten, leche"></div>
-          <div class="f"><label for="b_ale">Plato B · alérgenos <span class="req">*</span></label><input type="text" id="b_ale" maxlength="90" data-req placeholder="Si no tiene, escribe «Ninguno»"></div>
+          <div class="f"><label for="a_ale">Plato A · alérgenos <span class="req">*</span></label><input type="text" id="a_ale" maxlength="60" data-req placeholder="Ej.: gluten, leche"></div>
+          <div class="f"><label for="b_ale">Plato B · alérgenos <span class="req">*</span></label><input type="text" id="b_ale" maxlength="60" data-req placeholder="Si no tiene, escribe «Ninguno»"></div>
         </div>
         <p class="small">Alérgenos frecuentes: gluten, leche, huevo, maní y frutos secos, soya, pescado, mariscos.</p>
       </fieldset>
@@ -258,7 +274,7 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
         <legend><div class="head"><span class="num">6</span><h2>Etiquetas del plato original</h2><span class="crit">Requisito</span></div></legend>
         <p class="help">Nombra los productos envasados del plato original cuya etiqueta van a pegar en la hoja impresa, y marca sus sellos.</p>
         <div id="etiquetas"></div>
-        <div class="f"><label for="e_nota">Nota bajo las etiquetas <span class="cnt" data-cnt="e_nota"></span></label><input type="text" id="e_nota" maxlength="100"></div>
+        <div class="f"><label for="e_nota">Nota bajo las etiquetas <span class="cnt" data-cnt="e_nota"></span></label><input type="text" id="e_nota" maxlength="80"></div>
       </fieldset>
 
       <fieldset class="card">
@@ -268,7 +284,7 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
 
       <fieldset class="card">
         <legend><div class="head"><span class="num">8</span><h2>Fuentes</h2></div></legend>
-        <div class="f"><label for="fuentes">Una fuente por línea <span class="req">*</span><span class="cnt" data-cnt="fuentes"></span></label><textarea id="fuentes" rows="6" maxlength="520" data-req data-lines="6"></textarea></div>
+        <div class="f"><label for="fuentes">Una fuente por línea <span class="req">*</span><span class="cnt" data-cnt="fuentes"></span></label><textarea id="fuentes" rows="5" maxlength="320" data-req data-lines="5"></textarea></div>
       </fieldset>
 
       <button type="button" class="primary" id="btnPdf2">Descargar PDF</button>
@@ -316,30 +332,30 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
     c2_est: "El sachet trae azúcares y sal agregados. La casera solo tiene el azúcar natural de las verduras, junto con su fibra.",
     c2_ef: "Menos sodio y absorción más lenta del azúcar. No usamos edulcorantes: la zanahoria endulza.",
     c3_o: "Vienesas", c3_od: "grasa saturada y sodio", c3_m: "Pechuga de pollo", c3_md: "proteína completa, poca grasa", c3_bio: "Proteínas y grasas", c3_dato: "Grasa saturada: 7,5 → 1,0 g",
-    c3_est: "Ambos son proteína completa (9 aminoácidos esenciales). Las vienesas traen mucha grasa saturada: cadenas rectas, sin enlaces dobles.",
+    c3_est: "Ambos son proteína completa (9 aminoácidos esenciales). Las vienesas traen mucha grasa saturada: cadenas rectas.",
     c3_ef: "La grasa saturada sube el colesterol LDL. El pollo da casi el triple de proteína con muy poca grasa.",
     c4_on: true,
     c4_o: "Sin aceite agregado", c4_od: "la grasa viene de las vienesas", c4_m: "Aceite de oliva", c4_md: "grasa insaturada cis", c4_bio: "Lípidos", c4_dato: "Cuida el corazón (baja el LDL)",
     c4_est: "Grasa insaturada cis: el enlace doble dobla la cadena y la hace líquida.",
     c4_ef: "Ayuda a bajar el LDL. Evitamos margarina o manteca, que pueden aportar grasas trans (de la hidrogenación) o saturadas.",
     resultado: "−72 % sodio · −74 % grasa saturada · 2,6 veces más fibra · el doble de proteína",
-    porcion: "1 plato por persona: 80 g de fideos crudos + 100 g de carne + ~100 g de salsa en ambos.",
+    porcion: "1 plato por persona: 80 g de fideos crudos, 100 g de carne y ~100 g de salsa.",
     n_prot_o: "22", n_prot_m: "44", n_sat_o: "7,8", n_sat_m: "2,1", n_azu_o: "9,9", n_azu_m: "8,2", n_fib_o: "3,9", n_fib_m: "10", n_sod_o: "1434", n_sod_m: "397",
-    concl1: "El original tiene casi ¾ del sodio recomendado para un día (OMS: 2.000 mg); el mejorado, solo ⅕.",
-    concl2: "Bajan las grasas saturadas y sube la fibra gracias al pollo, el aceite de oliva y los fideos integrales.",
+    concl1: "El original tiene casi ¾ del sodio diario recomendado (OMS: 2.000 mg); el mejorado, ⅕.",
+    concl2: "Baja la grasa saturada y sube la fibra gracias al pollo, el aceite y la pasta integral.",
     concl3: "No comparamos calorías: el plato mejorado no busca alimentar menos, sino nutrir mejor.",
     porciones: "4",
     ro_ing: "320 g de fideos blancos\n2 sachets de salsa de tomate (400 g)\n8 vienesas",
     ro_pasos: "Cocer los fideos y colarlos.\nCalentar las vienesas en rodajas dentro de la salsa.\nServir.",
-    rm_ing: "320 g de fideos integrales (reemplaza fideos blancos)\n4 tomates, 1 cebolla, 1 zanahoria, 2 ajos (reemplazan la salsa en sachet)\n4 cdtas. de aceite de oliva · ½ cdta. de sal\n400 g de pechuga de pollo (reemplaza vienesas)",
+    rm_ing: "320 g de fideos integrales (en vez de blancos)\n4 tomates, 1 cebolla, 1 zanahoria, 2 ajos (en vez del sachet)\n4 cdtas. de aceite de oliva · ½ cdta. de sal\n400 g de pechuga de pollo (en vez de vienesas)",
     rm_pasos: "Sofreír cebolla, zanahoria y ajo en el aceite (5 min).\nAgregar tomate y sal; cocinar 15 min.\nAgregar el pollo; cocinar 10 min, sin partes rosadas.\nServir sobre los fideos integrales cocidos.",
     a_ing: "Fideos, salsa de tomate en sachet, vienesas", a_ale: "Gluten. Las vienesas pueden contener soya y leche.",
     b_ing: "Fideos integrales, tomate, cebolla, zanahoria, ajo, aceite de oliva, sal, pollo", b_ale: "Gluten",
     e1_nom: "vienesas", e1_s_sat: true, e1_s_sod: true, e2_nom: "salsa en sachet", e2_s_sod: true,
     e_nota: "El plato mejorado no usa ningún producto con sellos.",
-    fuentes: "Productos envasados: tabla nutricional de su etiqueta.\nVerduras, aceite de oliva y pollo: USDA FoodData Central (fdc.nal.usda.gov).\nLímites de los sellos: Ministerio de Salud, Ley 20.606 de Etiquetado de Alimentos.\nRecomendación de sodio: Organización Mundial de la Salud (OMS).\nGuías del curso: carbohidratos, grasas saturadas e insaturadas, grasas cis y trans, proteínas, endulzantes.",
+    fuentes: "Productos envasados: tabla nutricional de su etiqueta.\nVerduras, aceite y pollo: USDA FoodData Central (fdc.nal.usda.gov).\nLímites de los sellos: Minsal, Ley 20.606 de Etiquetado.\nRecomendación de sodio: OMS.\nGuías del curso: carbohidratos, grasas, proteínas y endulzantes.",
   };
-  const BLANK = { e_nota: "El plato mejorado no usa ningún producto con sellos.", fuentes: DEFAULT_FUENTES, c4_on: false };
+  const BLANK = { e_nota: "El plato mejorado no usa ningún producto con sellos.", fuentes: DEFAULT_FUENTES, c4_on: false, c5_on: false, c6_on: false };
 
   const $ = (s, r = document) => r.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -347,12 +363,12 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
   const lines = s => String(s || "").split(/\n+/).map(x => x.trim()).filter(Boolean);
 
   const cambiosEl = $("#cambios");
-  for (let i = 1; i <= 4; i++) {
-    const opt = i === 4;
+  for (let i = 1; i <= 6; i++) {
+    const opt = i >= 4;
     const d = document.createElement("div");
     d.className = "cambio"; d.id = `cambio${i}`;
     d.innerHTML = `
-      <h3>${opt ? `<label class="toggle"><input type="checkbox" id="c4_on"> Cambio 4 (opcional)</label>` : `Cambio ${i}`}</h3>
+      <h3>${opt ? `<label class="toggle"><input type="checkbox" id="c${i}_on"> Cambio ${i} (opcional)</label>` : `Cambio ${i}`}</h3>
       <div class="row">
         <div class="f"><label for="c${i}_o">Original <span class="req">*</span></label><input type="text" id="c${i}_o" maxlength="26" data-req data-c="${i}" placeholder="Ingrediente original"></div>
         <div class="f"><label for="c${i}_m">Mejorado <span class="req">*</span></label><input type="text" id="c${i}_m" maxlength="26" data-req data-c="${i}" placeholder="Ingrediente nuevo"></div>
@@ -362,12 +378,12 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
         <div class="f"><label for="c${i}_md">Qué tiene el mejorado <span class="req">*</span></label><input type="text" id="c${i}_md" maxlength="34" data-req data-c="${i}" placeholder="Ej.: conserva la fibra"></div>
       </div>
       <div class="row">
-        <div class="f"><label for="c${i}_bio">Biomolécula <span class="req">*</span></label><input type="text" id="c${i}_bio" maxlength="34" data-req data-c="${i}" list="bios" placeholder="Elige o escribe"></div>
-        <div class="f"><label for="c${i}_dato">Dato clave <span class="req">*</span></label><input type="text" id="c${i}_dato" maxlength="34" data-req data-c="${i}" placeholder="Ej.: Fibra: 2,4 → 7,2 g"></div>
+        <div class="f"><label for="c${i}_bio">Biomolécula <span class="req">*</span></label><input type="text" id="c${i}_bio" maxlength="30" data-req data-c="${i}" list="bios" placeholder="Elige o escribe"></div>
+        <div class="f"><label for="c${i}_dato">Dato clave <span class="req">*</span></label><input type="text" id="c${i}_dato" maxlength="30" data-req data-c="${i}" placeholder="Ej.: Fibra: 2,4 → 7,2 g"></div>
       </div>
       <div class="subt">Para la sección 2</div>
-      <div class="f"><label for="c${i}_est">Estructura <span class="req">*</span><span class="cnt" data-cnt="c${i}_est"></span></label><textarea id="c${i}_est" rows="3" maxlength="150" data-req data-c="${i}" placeholder="¿Qué tiene de distinto la molécula? Ej.: enlaces dobles, fibra, aminoácidos esenciales…"></textarea></div>
-      <div class="f"><label for="c${i}_ef">Efecto en el cuerpo <span class="req">*</span><span class="cnt" data-cnt="c${i}_ef"></span></label><textarea id="c${i}_ef" rows="3" maxlength="150" data-req data-c="${i}" placeholder="¿Qué le pasa al cuerpo? Ej.: glicemia, colesterol LDL, saciedad…"></textarea></div>`;
+      <div class="f"><label for="c${i}_est">Estructura <span class="req">*</span><span class="cnt" data-cnt="c${i}_est"></span></label><textarea id="c${i}_est" rows="3" maxlength="130" data-req data-c="${i}" placeholder="¿Qué tiene de distinto la molécula? Ej.: enlaces dobles, fibra, aminoácidos esenciales…"></textarea></div>
+      <div class="f"><label for="c${i}_ef">Efecto en el cuerpo <span class="req">*</span><span class="cnt" data-cnt="c${i}_ef"></span></label><textarea id="c${i}_ef" rows="3" maxlength="130" data-req data-c="${i}" placeholder="¿Qué le pasa al cuerpo? Ej.: glicemia, colesterol LDL, saciedad…"></textarea></div>`;
     cambiosEl.appendChild(d);
   }
   const bioList = document.createElement("datalist"); bioList.id = "bios";
@@ -406,12 +422,12 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
   }
   const showNum = v => { const n = num(v); return n == null ? esc(v) : fmt(n, 1); };
 
-  function activeCambios(s) { return [1, 2, 3, 4].filter(i => i < 4 || s.c4_on); }
+  function activeCambios(s) { const a = [1, 2, 3]; for (let i = 4; i <= 6 && s[`c${i}_on`]; i++) a.push(i); return a; }
   function missing(s) {
     const miss = [];
     document.querySelectorAll("#form [data-req]").forEach(el => {
       const c = el.dataset.c;
-      if (c === "4" && !s.c4_on) { el.closest(".f").classList.remove("missing"); return; }
+      if (c && !activeCambios(s).includes(+c)) { el.closest(".f").classList.remove("missing"); return; }
       const empty = !String(el.value || "").trim();
       const badNum = el.id.startsWith("n_") && !empty && num(el.value) == null;
       el.closest(".f, td")?.classList.toggle("missing", empty || badNum);
@@ -438,52 +454,52 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
     const cs = activeCambios(s);
     const plato = esc(s.plato || "nombre del plato");
     const team = esc(lines(s.integrantes).join(", "));
-    const longT = String(s.plato || "").length > 45;
+    const longT = [...String(s.plato || "")].reduce((a, ch) => a + (/[A-ZÁÉÍÓÚÑÜMW]/.test(ch) ? 1.3 : 1), 0) > 30;
     const nrows = NUT.map(n => ({ n, o: num(s[`n_${n.k}_o`]), m: num(s[`n_${n.k}_m`]), ro: s[`n_${n.k}_o`], rm: s[`n_${n.k}_m`] }))
       .map(r => ({ ...r, ch: change(r.o, r.m) }));
     const top = [...nrows].sort((x, y) => y.ch.mag - x.ch.mag).slice(0, 3).filter(r => r.ch.mag > 0).map(r => r.n.k);
     const esq = cs.map(i => `
-      <div class="box"><b>${esc(s[`c${i}_o`])}</b><span>${esc(s[`c${i}_od`])}</span></div>
-      <div class="arr"><div class="bio">${esc(s[`c${i}_bio`])}</div><div class="line"><i></i><em></em></div><div class="dato">${esc(s[`c${i}_dato`])}</div></div>
-      <div class="box m"><b>${esc(s[`c${i}_m`])}</b><span>${esc(s[`c${i}_md`])}</span></div>`).join("");
-    const why = cs.map(i => `<div class="cb"><b class="t">${esc(s[`c${i}_o`])} → ${esc(s[`c${i}_m`])}</b><span class="bio">${esc(s[`c${i}_bio`])}</span>
-      <p><b>Estructura:</b> ${esc(s[`c${i}_est`])}</p><p><b>Efecto:</b> ${esc(s[`c${i}_ef`])}</p></div>`).join("");
+      <div class="box"><b data-f="c${i}_o" data-max="1">${esc(s[`c${i}_o`])}</b><span data-f="c${i}_od" data-max="1">${esc(s[`c${i}_od`])}</span></div>
+      <div class="arr"><div class="bio" data-f="c${i}_bio" data-max="1">${esc(s[`c${i}_bio`])}</div><div class="line"><i></i><em></em></div><div class="dato" data-f="c${i}_dato" data-max="1">${esc(s[`c${i}_dato`])}</div></div>
+      <div class="box m"><b data-f="c${i}_m" data-max="1">${esc(s[`c${i}_m`])}</b><span data-f="c${i}_md" data-max="1">${esc(s[`c${i}_md`])}</span></div>`).join("");
+    const why = cs.map(i => `<div class="cb"><b class="t" data-f="c${i}_o c${i}_m" data-max="2">${esc(s[`c${i}_o`])} → ${esc(s[`c${i}_m`])}</b><span class="bio">${esc(s[`c${i}_bio`])}</span>
+      <p data-f="c${i}_est" data-max="3"><b>Estructura:</b> ${esc(s[`c${i}_est`])}</p><p data-f="c${i}_ef" data-max="3"><b>Efecto:</b> ${esc(s[`c${i}_ef`])}</p></div>`).join("");
     const nut = nrows.map(r => `<tr class="${top.includes(r.n.k) ? "hl" : ""}"><td>${r.n.label}</td><td class="c">${showNum(r.ro)}</td><td class="c">${showNum(r.rm)}</td><td class="c">${r.ch.t}</td></tr>`).join("");
-    const concl = [s.concl1, s.concl2, s.concl3].filter(x => String(x || "").trim()).map(x => `<li>${esc(x)}</li>`).join("");
-    const ul = t => `<ul>${lines(t).map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
-    const ol = t => `<ol>${lines(t).map(x => `<li>${esc(x)}</li>`).join("")}</ol>`;
+    const concl = ["concl1", "concl2", "concl3"].filter(k => String(s[k] || "").trim()).map(k => `<li data-f="${k}" data-max="1">${esc(s[k])}</li>`).join("");
+    const ul = (k, m) => `<ul data-f="${k}" data-max="${m}">${lines(s[k]).map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    const ol = (k, m) => `<ol data-f="${k}" data-max="${m}">${lines(s[k]).map(x => `<li>${esc(x)}</li>`).join("")}</ol>`;
     const etiq = [1, 2].filter(j => String(s[`e${j}_nom`] || "").trim()).map(j => {
       const has = SELLOS.filter(x => s[`e${j}_s_${x.k}`]);
-      return `<div class="paste"><div><b>Pegar aquí la etiqueta de ${esc(s[`e${j}_nom`])}</b>con su tabla nutricional${has.length ? (has.length > 1 ? " y sus sellos encerrados en un círculo" : " y su sello encerrado en un círculo") : ""}<div class="sl" data-sellos="${has.map(x => x.k).join(",")}"></div></div></div>`;
+      return `<div class="paste"><div><b data-f="e${j}_nom" data-max="2">Pegar aquí la etiqueta de ${esc(s[`e${j}_nom`])}</b>con su tabla nutricional${has.length ? (has.length > 1 ? " y sus sellos encerrados en un círculo" : " y su sello encerrado en un círculo") : ""}<div class="sl" data-sellos="${has.map(x => x.k).join(",")}"></div></div></div>`;
     }).join("");
-    const p1 = `<div class="sheet">
-      <div class="sh"><div><h1${longT ? ' style="font-size:19px"' : ""}>Mismo plato, mejor nutrición:<br>${plato}</h1><div class="sub">Feria Científico-Gastronómica · Biología Celular y Molecular</div></div>
-      <div class="meta"><b>Curso:</b> ${esc(s.curso)}<br>Anverso</div></div>
-      <div class="team"><b>Integrantes:</b> ${team}</div>
+    const p1 = `<div class="sheet${cs.length > 4 ? " many" : ""}">
+      <div class="sh"><div><h1${longT ? ' style="font-size:18px"' : ""}>Mismo plato, mejor nutrición:<br><span data-f="plato" data-max="2">${plato}</span></h1><div class="sub">Feria Científico-Gastronómica · Biología Celular y Molecular</div></div>
+      <div class="meta"><span data-f="curso" data-max="1"><b>Curso:</b> ${esc(s.curso)}</span><br>Anverso</div></div>
+      <div class="team" data-f="integrantes" data-max="3"><b>Integrantes:</b> ${team}</div>
       <section><h2><span class="n">1</span> Los dos platos y sus ${cs.length} cambios <span class="tag">Criterio 1</span></h2>
-        <div class="esq"><div class="colh">PLATO ORIGINAL</div><div></div><div class="colh m">PLATO MEJORADO</div>${esq}<div class="res">Por plato: ${esc(s.resultado)}</div></div></section>
+        <div class="esq"><div class="colh">PLATO ORIGINAL</div><div></div><div class="colh m">PLATO MEJORADO</div>${esq}<div class="res" data-f="resultado" data-max="1">Por plato: ${esc(s.resultado)}</div></div></section>
       <section><h2><span class="n">2</span> Por qué cada cambio es mejor <span class="tag">Criterios 2 y 4</span></h2><div class="g2">${why}</div></section>
       <section><h2><span class="n">3</span> Comparación nutricional <span class="tag">Criterio 3</span></h2>
         <table><tr><th>Nutriente</th><th class="c">Original</th><th class="c">Mejorado</th><th class="c">Cambio</th></tr>${nut}</table>
-        <p class="note" style="margin:5px 0 4px">${esc(s.porcion)} En esta feria no calculamos calorías.</p>
+        <p class="note" style="margin:5px 0 4px" data-f="porcion" data-max="1">${esc(s.porcion)} En esta feria no calculamos calorías.</p>
         <b>Conclusiones:</b><ul>${concl}</ul></section>
       <div class="foot">Sigue en el reverso: recetas, alérgenos, etiquetas, degustación y fuentes</div></div>`;
     const p2 = `<div class="sheet">
-      <div class="sh"><div><h1 style="font-size:18.5px">${cap(plato)} · reverso</h1></div><div class="meta"><b>Curso:</b> ${esc(s.curso)}<br>Reverso</div></div>
+      <div class="sh"><div><h1 style="font-size:18.5px" data-f="plato" data-max="2">${cap(plato)} · reverso</h1></div><div class="meta"><span data-f="curso" data-max="1"><b>Curso:</b> ${esc(s.curso)}</span><br>Reverso</div></div>
       <div class="team"><b>Integrantes:</b> ${team}</div>
       <section><h2><span class="n">4</span> Recetas (${esc(s.porciones || "_")} personas) <span class="tag">Requisito: receta de ambos platos</span></h2>
-        <div class="rec"><div><h3>Plato original</h3>${ul(s.ro_ing)}${ol(s.ro_pasos)}</div><div><h3>Plato mejorado</h3>${ul(s.rm_ing)}${ol(s.rm_pasos)}</div></div></section>
+        <div class="rec"><div><h3>Plato original</h3>${ul("ro_ing", 6)}${ol("ro_pasos", 5)}</div><div><h3>Plato mejorado</h3>${ul("rm_ing", 6)}${ol("rm_pasos", 5)}</div></div></section>
       <section><h2><span class="n">5</span> Ingredientes y alérgenos <span class="tag">Criterio 5 · Requisito</span></h2>
         <table><tr><th style="width:20%"></th><th>Plato A · original</th><th>Plato B · mejorado</th></tr>
-        <tr><td><b>Ingredientes</b></td><td>${esc(s.a_ing)}</td><td>${esc(s.b_ing)}</td></tr>
-        <tr><td><b>Alérgenos</b></td><td>${esc(s.a_ale)}</td><td>${esc(s.b_ale)}</td></tr></table></section>
+        <tr><td><b>Ingredientes</b></td><td data-f="a_ing" data-max="3">${esc(s.a_ing)}</td><td data-f="b_ing" data-max="3">${esc(s.b_ing)}</td></tr>
+        <tr><td><b>Alérgenos</b></td><td data-f="a_ale" data-max="2">${esc(s.a_ale)}</td><td data-f="b_ale" data-max="2">${esc(s.b_ale)}</td></tr></table></section>
       <section><h2><span class="n">6</span> Etiquetas del plato original <span class="tag">Criterio 3 · Requisito</span></h2>
-        <div class="g2">${etiq}</div>${String(s.e_nota || "").trim() ? `<p class="note" style="margin:5px 0 0">${esc(s.e_nota)}</p>` : ""}</section>
+        <div class="g2">${etiq}</div>${String(s.e_nota || "").trim() ? `<p class="note" style="margin:5px 0 0" data-f="e_nota" data-max="1">${esc(s.e_nota)}</p>` : ""}</section>
       <section><h2><span class="n">7</span> Resultado de la degustación <span class="tag">Criterio 6 · se completa al final de la feria</span></h2>
         <table style="width:70%"><tr><th>Resultado</th><th class="c" style="width:35%">N.° de personas</th></tr>
         <tr><td>Prefirieron A (original)</td><td></td></tr><tr><td>Prefirieron B (mejorado)</td><td></td></tr><tr><td>Les dio igual</td><td></td></tr><tr><td><b>Total</b></td><td></td></tr></table>
         <div class="bl2"><b>Conclusión:</b><div class="blank"></div></div><div class="bl2"><div class="blank"></div></div></section>
-      <section><h2><span class="n">8</span> Fuentes</h2>${ul(s.fuentes)}</section>
+      <section><h2><span class="n">8</span> Fuentes</h2>${ul("fuentes", 5)}</section>
       <div class="foot">Feria Científico-Gastronómica · Biología Celular y Molecular · Liceo Emblemático Octavio Palma Pérez (A-1)</div></div>`;
     return [p1, p2];
   }
@@ -494,6 +510,20 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
     return container.firstElementChild;
   }
 
+  function lineCount(el, k) {
+    const r = document.createRange(); r.selectNodeContents(el);
+    const bs = [...r.getClientRects()].filter(q => q.width > 0.5).map(q => q.bottom).sort((a, b) => a - b);
+    let n = 0, last = -1e9; for (const b of bs) { if (b - last > 6 * k) { n++; last = b; } } return n;
+  }
+  const fitMsgs = {};
+  document.querySelectorAll("#form .f").forEach(f => { const el = f.querySelector("input, textarea"); if (!el || !el.id) return; const m = document.createElement("div"); m.className = "fitmsg"; m.hidden = true; m.textContent = "Muy largo para la hoja: acórtalo un poco."; f.appendChild(m); fitMsgs[el.id] = m; });
+  let lastFit = [];
+  function checkFit(sheetsEls, k) {
+    const bad = new Set();
+    sheetsEls.forEach(sh => sh.querySelectorAll("[data-f]").forEach(el => { if (lineCount(el, k) > +el.dataset.max) el.dataset.f.split(" ").forEach(id => bad.add(id)); }));
+    Object.entries(fitMsgs).forEach(([id, m]) => { const on = bad.has(id); m.hidden = !on; document.getElementById(id).closest(".f").classList.toggle("toolong", on); });
+    lastFit = [...bad];
+  }
   const pagesEl = $("#pages");
   let lastOver = [false, false];
   function renderPreview(s) {
@@ -501,18 +531,20 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
     pagesEl.innerHTML = "";
     const avail = Math.max(240, pagesEl.clientWidth - 12);
     const k = Math.min(1, avail / 816);
+    const mounted = [];
     lastOver = [p1, p2].map((h, idx) => {
       const fr = document.createElement("div"); fr.className = "pageframe";
       fr.style.width = (816 * k) + "px"; fr.style.height = (1247 * k) + "px";
       const sc = document.createElement("div"); sc.className = "scaler"; sc.style.transform = `scale(${k})`;
       fr.appendChild(sc); pagesEl.appendChild(fr);
-      const sh = mount(sc, h);
+      const sh = mount(sc, h); mounted.push(sh);
       const sheetRect = sh.offsetHeight;
       const last = sh.lastElementChild;
       const over = sh.scrollHeight > sh.clientHeight + 1 || (last && (last.offsetTop + last.offsetHeight) > sheetRect - 30);
       if (over) { const b = document.createElement("div"); b.className = "over"; b.textContent = `El texto no cabe en el ${idx ? "reverso" : "anverso"}: acorta algunos campos`; fr.appendChild(b); }
       return over;
     });
+    checkFit(mounted, k);
   }
 
   const statusEl = $("#status");
@@ -527,9 +559,10 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
   let t;
   function update() {
     const s = readForm();
-    $("#cambio4").classList.toggle("off", !s.c4_on);
+    $("#manyNote").hidden = activeCambios(s).length <= 4;
+    for (let i = 4; i <= 6; i++) { const shown = i === 4 || (s[`c${i - 1}_on`] && activeCambios(s).includes(i - 1)); $(`#cambio${i}`).classList.toggle("hide", !shown); $(`#cambio${i}`).classList.toggle("off", !s[`c${i}_on`]); }
     NUT.forEach(n => { $(`#chg_${n.k}`).textContent = change(num(s[`n_${n.k}_o`]), num(s[`n_${n.k}_m`])).t; });
-    document.querySelectorAll("[data-cnt]").forEach(c => { const el = document.getElementById(c.dataset.cnt); c.textContent = `${el.value.length}/${el.maxLength}`; });
+    document.querySelectorAll("[data-cnt]").forEach(c => { const el = document.getElementById(c.dataset.cnt); c.textContent = `${el.value.length}/${el.maxLength}`; c.classList.toggle("near", el.value.length >= el.maxLength * 0.9); });
     clearTimeout(t); t = setTimeout(() => { renderPreview(s); save(s); }, 180);
   }
   $("#form").addEventListener("input", e => { e.target.closest(".f, td")?.classList.remove("missing"); if (isExample) { isExample = false; refreshBanner(); } update(); });
@@ -565,6 +598,13 @@ dialog .actions { margin-top: 12px; justify-content: flex-end; }
       return;
     }
     renderPreview(s);
+    if (lastFit.length) {
+      const first = document.getElementById(lastFit[0]);
+      const names = [...new Set(lastFit.map(id => { const el = document.getElementById(id); const lab = el.closest(".f").querySelector("label").childNodes[0].textContent.trim(); const c = el.closest(".cambio"); return (c ? c.querySelector("h3").textContent.trim().replace(" (opcional)", "") + " · " : "") + lab; }))];
+      refreshBanner({ kind: "problem", html: `<p><b>${names.length === 1 ? "Un campo es muy largo" : names.length + " campos son muy largos"} para la hoja</b> (marcados en rojo). Acórtalos un poco:<ul>${names.map(x => `<li>${esc(x)}</li>`).join("")}</ul></p><button type="button" id="goLong">Ir al primero</button>` });
+      $("#goLong").addEventListener("click", () => { setView("form"); first.scrollIntoView({ block: "center", behavior: "smooth" }); first.focus({ preventScroll: true }); });
+      return;
+    }
     if (lastOver.some(Boolean)) {
       refreshBanner({ kind: "problem", html: `<p><b>El texto no cabe en la hoja</b> (${lastOver[0] ? "anverso" : ""}${lastOver[0] && lastOver[1] ? " y " : ""}${lastOver[1] ? "reverso" : ""}). Acorta los textos más largos y vuelve a intentarlo. Mira la vista previa para ver dónde se corta.</p>` });
       return;
